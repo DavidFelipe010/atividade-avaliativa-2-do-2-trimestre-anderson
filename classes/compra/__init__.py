@@ -1,4 +1,7 @@
 from modulos.verificador import Verificadores
+from modulos.texto import Texto
+
+texto = Texto()
 
 class Compra:
     def __init__(self, id, data, numero_protocolo, produto, cliente):
@@ -23,13 +26,16 @@ class Compra:
 ''')
         autorizar = Verificadores.verifica_bool('| Quer realizar a compra? (S/N): ')
 
+        texto.limpa()
         if autorizar:
-            print('\n| Compra realizada com sucesso!')
+            print(f'| {texto.cores('verde')}Compra realizada com sucesso!{texto.cores()}')
+            
+            self.produto.quantidade -= qtd_produtos
         else:
-            print('\n| Compra cancelada!')
+            print(f'| {texto.cores('vermelho')}Compra cancelada!{texto.cores()}')
 
-        self.produto.quantidade -= qtd_produtos
 
+        input(f'\n| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
         return
 
     def emitir_nota_fiscal(self):

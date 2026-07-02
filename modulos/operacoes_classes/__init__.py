@@ -1,36 +1,32 @@
 import itertools
 import datetime
 from random import choice
+from modulos.texto import Texto
 
-# Iterator global que gera IDs automaticamente (0, 1, 2, 3, ...)
-_id_counter_cliente = itertools.count(start=1, step=1)
-_id_counter_produto = itertools.count(start=1, step=1)
-_id_counter_compra = itertools.count(start=1, step=1)
+texto = Texto()
+
+id_counter_cliente = itertools.count(start=1, step=1)
+id_counter_produto = itertools.count(start=1, step=1)
+id_counter_compra = itertools.count(start=1, step=1)
+
 
 def gerar_id_cliente():
-    """
-    Retorna um ID numérico incremental seguro e único.
-    """
     try:
-        return next(_id_counter_cliente)
+        return next(id_counter_cliente)
     except Exception as e:
         raise RuntimeError(f"Erro ao gerar ID: {e}")
+
 
 def gerar_id_produto():
-    """
-    Retorna um ID numérico incremental seguro e único.
-    """
     try:
-        return next(_id_counter_produto)
+        return next(id_counter_produto)
     except Exception as e:
         raise RuntimeError(f"Erro ao gerar ID: {e}")
 
+
 def gerar_id_compra():
-    """
-    Retorna um ID numérico incremental seguro e único.
-    """
     try:
-        return next(_id_counter_compra)
+        return next(id_counter_compra)
     except Exception as e:
         raise RuntimeError(f"Erro ao gerar ID: {e}")
 
@@ -38,7 +34,8 @@ def gerar_id_compra():
 def gerar_numero_protocolo():
     nums = (0,1,2,3,4,5,6,7,8,9)
     protocolo = ''
-    for i in range(16):
+    
+    for _ in range(16):
         protocolo += f'{choice(nums)}'
 
     return protocolo
@@ -46,66 +43,151 @@ def gerar_numero_protocolo():
 
 class Operacoes:
     def cadastrar_produto(self, classe):
+        texto.limpa()
+        texto.titulo('cadastar produto')
+
         id = gerar_id_produto()
-        nome = input('Qual o nome do produto: ')
-        preco = float(input('Qual o preco do produto: '))
-        quantidade = int(input('Quantos você deseja cadastrar: '))
-        data_validade = input('Informe a data de validade do produto: ')
+        nome = input('| Qual o nome do produto: ')
+        preco = float(input('| Qual o preco do produto: '))
+        quantidade = int(input('| Qual estoque? (unidades): '))
+        data_validade = input('| Informe a data de validade do produto: ')
+
+        texto.limpa()
+
+        print(f'|{texto.cores('verde')} Cadastro de {texto.cores()}{texto.cores('amarelo')}produto{texto.cores()}{texto.cores('verde')} realizado com sucesso!{texto.cores()}')
+
+        input(f'\n| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
 
         return classe(id,nome,preco,quantidade,data_validade)
     
     def cadastrar_cliente(self, classe):
-        #  id, nome, cpf, email, rg, data_nascimento
-        id = gerar_id_cliente()
-        nome = input('Qual o nome do Cliente: ')
-        cpf = input('Qual o CPF do Cliente: ')
-        email = input('Qual o Email do Cliente: ')
-        rg = input('Qual o RG do Cliente: ')
-        data_nascimento = input('Qual a data de nascimento do Cliente? Ex.: 03/03/2027: ')
+        texto.limpa()
+        texto.titulo('cadastar cliente')
+        
 
+
+        id = gerar_id_cliente()
+        
+        if id > 1:
+            print(f'| {texto.cores('vermelho')}Não{texto.cores()} pode cadastar mais de 1 cliente!')
+
+            input(f'\n| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
+            
+            return 
+        
+        nome = input('| Qual o nome do Cliente: ')
+        cpf = input('| Qual o CPF do Cliente: ')
+        email = input('| Qual o Email do Cliente: ')
+        rg = input('| Qual o RG do Cliente: ')
+        data_nascimento = input('| Qual a data de nascimento do Cliente? Ex.: 03/03/2027: ')
+
+        texto.limpa()
+
+        print(f'\n| {texto.cores('verde')}Cadastro de {texto.cores()}{texto.cores('amarelo')}cliente{texto.cores()}{texto.cores('verde')} realizado com sucesso!{texto.cores()}')
+
+        input(f'\n| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
+        
         return classe(id,nome,cpf,email,rg,data_nascimento)
 
     def listar_produtos(self, lst):
-        print(f'{"Id.":<10} {"Nome.":<25} {"Preço.":<10}')
-        print('=' * 180)
+        texto.limpa()
+        texto.titulo('lista de produtos')
 
-        for produto in lst:
-            preco = f'R${produto.preco}'
-            print(f'{produto.id:<10} {produto.nome:<25} {preco:<10}')
+        if not lst:
+            print(f'| {texto.cores('amarelo')} Não há nenhum produto cadastrado!{texto.cores()}')
+        
+        else:       
+            texto.linha(60)
+            print(f'{"Id.":<10} {"Nome.":<25} {"Preço.":<10}')
+            texto.linha(60)
+
+            for produto in lst:
+                preco = f'R${produto.preco:,.2f}'
+                
+                print(f'{produto.id:<10} {produto.nome:<25} {preco:<10}')
+            texto.linha(60)
+
+        input(f'\n| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
+
+        return
     
+    def lista_produtos(self, lst):        
+            texto.linha(60)
+            print(f'{"Id.":<10} {"Nome.":<25} {"Preço.":<10}')
+            texto.linha(60)
+
+            for produto in lst:
+                preco = f'R${produto.preco:,.2f}'
+                
+                print(f'{produto.id:<10} {produto.nome:<25} {preco:<10}')
+            texto.linha(60)
+
     def cadastrar_compra(self, classe, cliente, lst_produtos):
-        # id, data, numero_protocolo, produto
-        id = gerar_id_compra()
-        data = datetime.date.today()
-        numero_protocolo = gerar_numero_protocolo()
-        
-        self.listar_produtos(lst_produtos)
-        opc = int(input('Qual produto você quer cadastar na compra? (id): '))
-        
-        while not 1 <= opc <= len(lst_produtos):
-            print('Esse id não existe!')
-            opc = int(input('Qual produto você quer cadastar na compra? (id): '))
+        texto.limpa()
+        texto.titulo('Cadastrar compra')
 
-        produto = lst_produtos[opc - 1]
+        if not lst_produtos:
+            print(f'| {texto.cores('amarelo')} Não há nenhum produto cadastrado!{texto.cores()}')
+            
+            input(f'\n| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
 
-        return classe(id, data, numero_protocolo, produto, cliente)
+            return
+            
+        else:
+            id = gerar_id_compra()
+            data = datetime.date.today()
+            numero_protocolo = gerar_numero_protocolo()
+            
+            self.lista_produtos(lst_produtos)
+            opc = int(input('| Qual produto você quer cadastar na compra? (id): '))
+            
+            while not 1 <= opc <= len(lst_produtos):
+                print(f'\n| Esse {texto.cores('amarelo')}ID{texto.cores()} {texto.cores('vermelho')}não existe{texto.cores()}!')
+                opc = int(input('| Qual produto você quer cadastar na compra? (id): '))
+            
+            produto = lst_produtos[opc - 1]
+            
+            texto.limpa()
+            
+            print(f'| {texto.cores('verde')} Compra cadastrada com sucesso!{texto.cores()}')
+            
+            input(f'\n| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
+            
+            return classe(id, data, numero_protocolo, produto, cliente)
 
     def listar_compras(self, lst):
+        texto.linha(51)
         print(f'{"Id.":<10} {"Nome Produto.":<25}')
-        print('=' * 180)
+        texto.linha(51)
 
         for compra in lst:
             print(f'{compra.id:<10} {compra.produto.nome:<25}')
+        texto.linha(51)
 
     def realizar_compra(self, lst):
-        self.listar_compras(lst)
-        opc = int(input('Qual comprar você quer realizar? (id):'))
-        while not 1 <= opc <= len(lst):
-            print('Esse ID não existe!')
-            opc = int(input('Qual comprar você quer realizar? (id):'))
+        texto.limpa()
+        texto.titulo('realizar compra')
+        
+        if not lst:
+            print(f'| {texto.cores('amarelo')}Não há nenhuma compra cadastrada!{texto.cores()}')
 
-        compra = lst[opc - 1]
+            input(f'\n| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
 
-        qtd_compra = int(input('Quantos items você quer comprar?: '))
+            return
 
-        compra.realizar_pagamento(qtd_compra)
+        else:
+            self.listar_compras(lst)
+
+            opc = int(input('| Qual comprar você quer realizar? (id): '))
+            
+            while not 1 <= opc <= len(lst):
+                print(f'\n| Esse {texto.cores('amarelo')}ID{texto.cores()} {texto.cores('vermelho')}não existe{texto.cores()}!')
+                opc = int(input('| Qual comprar você quer realizar? (id): '))
+
+            compra = lst[opc - 1]
+
+            texto.limpa()
+            qtd_compra = int(input('| Quantos itens você quer comprar? (unidades): '))
+
+            texto.limpa()
+            compra.realizar_pagamento(qtd_compra)
