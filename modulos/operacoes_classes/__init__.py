@@ -2,8 +2,10 @@ import itertools
 import datetime
 from random import choice
 from modulos.texto import Texto
+from modulos.verificador import *
 
 texto = Texto()
+verificadores = Verificadores()
 
 id_counter_cliente = itertools.count(start=1, step=1)
 id_counter_produto = itertools.count(start=1, step=1)
@@ -48,9 +50,9 @@ class Operacoes:
 
         id = gerar_id_produto()
         nome = input('| Qual o nome do produto: ')
-        preco = float(input('| Qual o preco do produto: '))
-        quantidade = int(input('| Qual estoque? (unidades): '))
-        data_validade = input('| Informe a data de validade do produto: ')
+        preco = verificadores.verifica_float('| Qual o preco do produto? R$')
+        quantidade = verificadores.verifica_int('| Qual estoque? (unidades): ')
+        data_validade = input('| Informe a data de validade do produto? (Ex.: 03/02/2027): ').replace('\\','').replace('/','')
 
         texto.limpa()
 
@@ -75,11 +77,11 @@ class Operacoes:
             
             return 
         
-        nome = input('| Qual o nome do Cliente: ')
-        cpf = input('| Qual o CPF do Cliente: ')
-        email = input('| Qual o Email do Cliente: ')
-        rg = input('| Qual o RG do Cliente: ')
-        data_nascimento = input('| Qual a data de nascimento do Cliente? Ex.: 03/03/2027: ')
+        nome = input('| Qual o nome do Cliente? (Ex.: João Neto): ')
+        cpf = input('| Qual o CPF do Cliente? (Ex.:999.999.999-00): ').replace('.', '').replace('-', '')
+        email = input('| Qual o Email do Cliente? (Ex.: joaoneto@gmail.com): ')
+        rg = input('| Qual o RG do Cliente? (Ex.: 99.999.999): ').replace('.','')
+        data_nascimento = input('| Qual a data de nascimento do Cliente? (Ex.: 03/03/2027): ').replace('\\', '').replace('/', '')
 
         texto.limpa()
 
@@ -139,11 +141,11 @@ class Operacoes:
             numero_protocolo = gerar_numero_protocolo()
             
             self.lista_produtos(lst_produtos)
-            opc = int(input('| Qual produto você quer cadastar na compra? (id): '))
+            opc = verificadores.verifica_int('| Qual produto você quer cadasar na compra? (id): ')
             
             while not 1 <= opc <= len(lst_produtos):
                 print(f'\n| Esse {texto.cores('amarelo')}ID{texto.cores()} {texto.cores('vermelho')}não existe{texto.cores()}!')
-                opc = int(input('| Qual produto você quer cadastar na compra? (id): '))
+                opc = verificadores.verifica_int('| Qual produto você quer cadasar na compra? (id): ')
             
             produto = lst_produtos[opc - 1]
             
@@ -178,16 +180,19 @@ class Operacoes:
         else:
             self.listar_compras(lst)
 
-            opc = int(input('| Qual comprar você quer realizar? (id): '))
+            opc = verificadores.verifica_int('| Qual comprar você quer realiar? (id): ')
             
             while not 1 <= opc <= len(lst):
                 print(f'\n| Esse {texto.cores('amarelo')}ID{texto.cores()} {texto.cores('vermelho')}não existe{texto.cores()}!')
-                opc = int(input('| Qual comprar você quer realizar? (id): '))
+                opc = verificadores.verifica_int('| Qual comprar você quer realiar? (id): ')
 
             compra = lst[opc - 1]
 
             texto.limpa()
-            qtd_compra = int(input('| Quantos itens você quer comprar? (unidades): '))
+            self.qtd_compra = verificadores.verifica_int('| Quantos itens você quer comprar? (unidades): ')
 
             texto.limpa()
-            compra.realizar_pagamento(qtd_compra)
+            compra.realizar_pagamento(self.qtd_compra)
+
+    def emitir_nota_fiscal(self, lst):
+        self.listar_compras(lst)
