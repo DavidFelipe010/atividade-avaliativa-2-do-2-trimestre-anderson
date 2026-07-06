@@ -4,12 +4,14 @@ from classes.produto import *
 from modulos.texto import *
 from modulos.operacoes_classes import *
 from modulos.texto import *
+from modulos.verificador import *
 
 produtos = []
 compras = []
 
 texto = Texto()
 operacoes = Operacoes()
+verificadores = Verificadores()
 
 while True:
     texto.limpa()
@@ -23,7 +25,7 @@ while True:
 [ 3 ] - Listar Produtos
 [ 4 ] - Cadastrar Compra
 [ 5 ] - Realizar pagamento''')
-    opcao = int(input('Sua opção: '))
+    opcao = verificadores.verifica_int('Sua opção: ')
     
     match opcao:
         case 0:
