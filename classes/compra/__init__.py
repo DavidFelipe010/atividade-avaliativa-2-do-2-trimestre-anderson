@@ -17,6 +17,13 @@ class Compra:
 
     def realizar_pagamento(self, qtd_produtos):
         self.qtd_produtos = qtd_produtos
+
+        if self.qtd_produtos > self.produto.estoque:
+            print(f'| {texto.cores('amarelo')}A quantidade de compra é maior que o estoque! {texto.cores()}{texto.cores('vermelho')}Não{texto.cores()}{texto.cores('amarelo')} foi possível realizar a compra!{texto.cores()}')
+
+            return
+
+        
         print(f'''| Id da compra: {self.id}
 | Número de protocolo: {self.numero_protocolo}
 | Id do produto: {self.produto.id}

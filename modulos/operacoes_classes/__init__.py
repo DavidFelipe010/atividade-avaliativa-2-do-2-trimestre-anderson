@@ -99,30 +99,30 @@ class Operacoes:
             print(f'| {texto.cores('amarelo')} Não há nenhum produto cadastrado!{texto.cores()}')
         
         else:       
-            texto.linha(60)
-            print(f'{"Id.":<10} {"Nome.":<25} {"Preço.":<10}')
-            texto.linha(60)
+            texto.linha(70)
+            print(f'{"Id.":<10} {"Nome.":<25} {"Preço.":<10} {"Estoque."}')
+            texto.linha(70)
 
             for produto in lst:
                 preco = f'R${produto.preco:,.2f}'
                 
-                print(f'{produto.id:<10} {produto.nome:<25} {preco:<10}')
-            texto.linha(60)
+                print(f'{produto.id:<10} {produto.nome:<25} {preco:<10} {produto.estoque}')
+            texto.linha(70)
 
         input(f'\n| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
 
         return
     
     def lista_produtos(self, lst):        
-            texto.linha(60)
-            print(f'{"Id.":<10} {"Nome.":<25} {"Preço.":<10}')
-            texto.linha(60)
+            texto.linha(70)
+            print(f'{"Id.":<10} {"Nome.":<25} {"Preço.":<10} {"Estoque."}')
+            texto.linha(70)
 
             for produto in lst:
                 preco = f'R${produto.preco:,.2f}'
                 
-                print(f'{produto.id:<10} {produto.nome:<25} {preco:<10}')
-            texto.linha(60)
+                print(f'{produto.id:<10} {produto.nome:<25} {preco:<10} {produto.estoque}')
+            texto.linha(70)
 
     def cadastrar_compra(self, classe, cliente, lst_produtos):
         texto.limpa()
@@ -196,3 +196,16 @@ class Operacoes:
 
     def emitir_nota_fiscal(self, lst):
         self.listar_compras(lst)
+
+        opc = verificadores.verifica_int('| Qual comprar você quer emitir nota fiscal? (id): ')
+            
+        while not 1 <= opc <= len(lst):
+            print(f'\n| Esse {texto.cores('amarelo')}ID{texto.cores()} {texto.cores('vermelho')}não existe{texto.cores()}!')
+            opc = verificadores.verifica_int('| Qual comprar você quer nota fiscal? (id): ')
+
+        compra = lst[opc - 1]
+
+        print(compra.emitir_nota_fiscal())
+
+        input(f'| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
+

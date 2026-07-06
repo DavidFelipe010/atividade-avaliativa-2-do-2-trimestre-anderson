@@ -22,3 +22,9 @@ class Texto:
                      'azul':'\033[34m'}
         
         return dic_cores[cor]
+
+    def formatar_cpf(self, cpf):
+        return f'{cpf[:3]}.{cpf[4:6]}.{cpf[7:9]}-{10:}'
+
+    def formatar_data(self, data):
+        return f'{data[:1]/{data[2:3]}/{data[4:]}}'

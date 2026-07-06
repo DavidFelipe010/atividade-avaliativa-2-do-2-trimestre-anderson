@@ -1,9 +1,9 @@
 class Produto:
-    def __init__(self, id, nome, preco, quantidade, validade):
+    def __init__(self, id, nome, preco, estoque, validade):
         self.id = id
         self.nome = nome
         self.preco = preco
-        self.quantidade = quantidade
+        self.estoque = estoque
         self.validade = validade
 
     def __str__(self):

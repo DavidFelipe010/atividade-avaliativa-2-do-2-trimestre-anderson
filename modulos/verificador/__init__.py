@@ -51,7 +51,7 @@ class Verificadores:
             label = input(txt).strip().replace(',','.')
 
             try:
-                num = int(label)
+                num = float(label)
 
                 return num
 
