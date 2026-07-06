@@ -2,6 +2,7 @@ from modulos.verificador import Verificadores
 from modulos.texto import Texto
 
 texto = Texto()
+verificadores = Verificadores()
 
 class Compra:
     def __init__(self, id, data, numero_protocolo, produto, cliente):
@@ -24,7 +25,7 @@ class Compra:
 | Quantidade: {self.qtd_produtos}x
 | Total: R${(self.produto.preco * self.qtd_produtos):,.2f}
 ''')
-        autorizar = Verificadores.verifica_bool('| Quer realizar a compra? (S/N): ')
+        autorizar = verificadores.verifica_bool('| Quer realizar a compra? (S/N): ')
 
         texto.limpa()
         if autorizar:

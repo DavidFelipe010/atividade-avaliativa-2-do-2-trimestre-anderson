@@ -141,11 +141,11 @@ class Operacoes:
             numero_protocolo = gerar_numero_protocolo()
             
             self.lista_produtos(lst_produtos)
-            opc = verificadores.verifica_int('| Qual produto você quer cadasar na compra? (id): ')
+            opc = verificadores.verifica_int('| Qual produto você quer cadastrar na compra? (id): ')
             
             while not 1 <= opc <= len(lst_produtos):
                 print(f'\n| Esse {texto.cores('amarelo')}ID{texto.cores()} {texto.cores('vermelho')}não existe{texto.cores()}!')
-                opc = verificadores.verifica_int('| Qual produto você quer cadasar na compra? (id): ')
+                opc = verificadores.verifica_int('| Qual produto você quer cadastrar na compra? (id): ')
             
             produto = lst_produtos[opc - 1]
             
@@ -180,11 +180,11 @@ class Operacoes:
         else:
             self.listar_compras(lst)
 
-            opc = verificadores.verifica_int('| Qual comprar você quer realiar? (id): ')
+            opc = verificadores.verifica_int('| Qual comprar você quer realizar? (id): ')
             
             while not 1 <= opc <= len(lst):
                 print(f'\n| Esse {texto.cores('amarelo')}ID{texto.cores()} {texto.cores('vermelho')}não existe{texto.cores()}!')
-                opc = verificadores.verifica_int('| Qual comprar você quer realiar? (id): ')
+                opc = verificadores.verifica_int('| Qual comprar você quer realizar? (id): ')
 
             compra = lst[opc - 1]
 
