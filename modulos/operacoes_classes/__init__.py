@@ -132,6 +132,12 @@ class Operacoes:
             input(f'\n| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
 
             return
+        
+        elif not cliente:
+            texto.limpa()
+            print(f'| {texto.cores('amarelo')}Não há nenhum cliente cadastrado!{texto.cores()}')
+
+            input(f'\n| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
             
         else:
             id = gerar_id_compra()
