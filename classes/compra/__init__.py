@@ -61,6 +61,8 @@ class Compra:
     def emitir_nota_fiscal(self):
         if not self.pg:
             print(f'| {texto.cores('amarelo')}A compra ainda {texto.cores() + texto.cores('vermelho')}não{texto.cores() + texto.cores('amarelo')} foi paga!{texto.cores()}')
+            
+            return
         
         nome_mercado = 'David & Rohan mercados'
         linha = '='
