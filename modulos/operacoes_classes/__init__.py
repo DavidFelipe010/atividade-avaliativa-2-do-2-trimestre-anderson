@@ -224,9 +224,12 @@ class Operacoes:
         compra = lst[opc - 1]
 
         texto.limpa()
-        print(compra.emitir_nota_fiscal())
+        if compra.pg:
+            print(compra.emitir_nota_fiscal())
+        else:
+            compra.emitir_nota_fiscal()
 
-        input(f'| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
+        input(f'\n| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
 
     def mostar_validade(self, lst):
         texto.limpa()
