@@ -15,8 +15,7 @@ class Verificadores:
             if label == 's':
                 return True
             
-            return False
-        
+            return False      
 
     def verifica_nums_naturais(self, txt):
         while True:
@@ -57,3 +56,39 @@ class Verificadores:
 
             except (TypeError, ValueError):
                 print(f'{texto.cores('vermelho')}[ERROR] Digite apenas números!\n{texto.cores()}')
+
+    def verifica_data(self, txt):
+        while True:
+            label = input(txt).strip().replace('/', '').replace('\\','')
+
+            if not len(label) == 8:
+                print(f'{texto.cores('vermelho')}Data inserida de forma incorreta!{texto.cores() + texto.cores('amarelo')} coloque extamente {texto.cores() + texto.cores('azul')}8{texto.cores() + texto.cores('amarelo')} digitos. {texto.cores() + texto.cores('azul')}Obs.: Desconsiderar as barras!{texto.cores()}\n')
+
+                continue 
+
+            else:
+                return label
+            
+    def verifica_cpf(self, txt):
+        while True:
+            label = input(txt).strip().replace('.', '').replace('-', '')
+
+            if not len(label) == 11:
+                print(f'{texto.cores('vermelho')}CPF inserido de forma incorreta!{texto.cores() + texto.cores('amarelo')} coloque extamente {texto.cores() + texto.cores('azul')}11{texto.cores() + texto.cores('amarelo')} digitos. {texto.cores() + texto.cores('azul')}Obs.: Desconsiderar os pontos e o hífen!{texto.cores()}\n')
+
+                continue
+
+            else:
+                return label
+    
+    def verifica_rg(self, txt):
+        while True:
+            label = input(txt).strip().replace('.','')
+
+            if not len(label) == 8:
+                print(f'{texto.cores('vermelho')}RG inserido de forma incorreta!{texto.cores() + texto.cores('amarelo')} coloque extamente {texto.cores() + texto.cores('azul')}8{texto.cores() + texto.cores('amarelo')} digitos. {texto.cores() + texto.cores('azul')}Obs.: Desconsiderar os pontos!{texto.cores()}\n')
+
+                continue
+
+            else:
+                return label

@@ -15,4 +15,4 @@ class Cliente:
         return f'{self.nome} está indo ao mercado...'
     
     def voltar_para_casa(self):
-        return f'{self.nome} está voltando para casa, com suas compras...'
+        return f'{self.nome} está voltando para casa com suas compras...'

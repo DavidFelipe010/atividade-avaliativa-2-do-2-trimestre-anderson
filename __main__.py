@@ -13,6 +13,8 @@ texto = Texto()
 operacoes = Operacoes()
 verificadores = Verificadores()
 
+cliente = None
+
 while True:
     texto.limpa()
     texto.titulo('menu')
@@ -32,8 +34,8 @@ Obs.: Siga a ordem abaixo (Ignore o 0 e o listar produtos se quiser)
 [ 8 ] - Cliente voltar para casa
 
 ====== Parte 2 ======
-[ 9 ]  - Mostrar preço do produto
-[ 10 ] - Mostar estoque do produto''')
+[ 9 ]  - Mostrar validade do produto
+[ 10 ] - Repor estoque do produto''')
     opcao = verificadores.verifica_int('Sua opção: ')
     
     match opcao:
@@ -47,11 +49,12 @@ Obs.: Siga a ordem abaixo (Ignore o 0 e o listar produtos se quiser)
             produtos.append(produto)
         
         case 2:
-            cliente = operacoes.cadastrar_cliente(classe=Cliente)
+            cliente = operacoes.cadastrar_cliente(classe=Cliente, cliente=cliente)
 
         case 3:
             texto.limpa()
-            print(cliente.ir_ao_mercado())
+
+            print(cliente.ir_ao_mercado() if cliente is not None else f'| {texto.cores('amarelo')}Não há nenhum cliente cadastrado!{texto.cores()}')
 
             input(f'\n| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
         
@@ -63,7 +66,7 @@ Obs.: Siga a ordem abaixo (Ignore o 0 e o listar produtos se quiser)
                 compra = operacoes.cadastrar_compra(classe=Compra, cliente=cliente, lst_produtos=produtos)
                 compras.append(compra)
             
-            except NameError:
+            except (NameError, AttributeError):
                 texto.limpa()
                 print(f'| {texto.cores('amarelo')}Não há nenhum cliente cadastrado!{texto.cores()}')
 
@@ -81,6 +84,11 @@ Obs.: Siga a ordem abaixo (Ignore o 0 e o listar produtos se quiser)
 
             input(f'| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
         
+        case 9:
+            operacoes.mostar_validade(produtos)
+
+        case 10:
+            operacoes.repor_estoque(produtos)
         
         case _:
             print('Informe um número válido!')

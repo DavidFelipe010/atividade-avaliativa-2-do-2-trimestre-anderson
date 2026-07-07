@@ -52,7 +52,7 @@ class Operacoes:
         nome = input('| Qual o nome do produto: ')
         preco = verificadores.verifica_float('| Qual o preco do produto? R$')
         quantidade = verificadores.verifica_int('| Qual estoque? (unidades): ')
-        data_validade = input('| Informe a data de validade do produto? (Ex.: 03/02/2027): ').replace('\\','').replace('/','')
+        data_validade = verificadores.verifica_data('| Informe a data de validade do produto? (Ex.: 03/02/2027): ')
 
         texto.limpa()
 
@@ -60,28 +60,26 @@ class Operacoes:
 
         input(f'\n| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
 
-        return classe(id,nome,preco,quantidade,data_validade)
+        return classe(id, nome.title(), preco, quantidade, texto.formatar_data(data_validade))
     
-    def cadastrar_cliente(self, classe):
+    def cadastrar_cliente(self, classe, cliente):
         texto.limpa()
         texto.titulo('cadastar cliente')
         
-
-
-        id = gerar_id_cliente()
-        
-        if id > 1:
+        if cliente is not None:
             print(f'| {texto.cores('vermelho')}Não{texto.cores()} pode cadastar mais de 1 cliente!')
 
             input(f'\n| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
             
-            return 
+            return cliente
+        
+        id = gerar_id_cliente()
         
         nome = input('| Qual o nome do Cliente? (Ex.: João Neto): ')
-        cpf = input('| Qual o CPF do Cliente? (Ex.:999.999.999-00): ').replace('.', '').replace('-', '')
+        cpf = verificadores.verifica_cpf('| Qual o CPF do Cliente? (Ex.:999.999.999-00): ')
         email = input('| Qual o Email do Cliente? (Ex.: joaoneto@gmail.com): ')
-        rg = input('| Qual o RG do Cliente? (Ex.: 99.999.999): ').replace('.','')
-        data_nascimento = input('| Qual a data de nascimento do Cliente? (Ex.: 03/03/2027): ').replace('\\', '').replace('/', '')
+        rg = verificadores.verifica_rg('| Qual o RG do Cliente? (Ex.: 99.999.999): ')
+        data_nascimento = verificadores.verifica_data('| Qual a data de nascimento do Cliente? (Ex.: 03/03/1994): ')
 
         texto.limpa()
 
@@ -89,7 +87,7 @@ class Operacoes:
 
         input(f'\n| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
         
-        return classe(id,nome,cpf,email,rg,data_nascimento)
+        return classe(id, nome.title(), texto.formatar_cpf(cpf), email, texto.formatar_rg(rg), texto.formatar_data(data_nascimento))
 
     def listar_produtos(self, lst):
         texto.limpa()
@@ -158,13 +156,16 @@ class Operacoes:
             return classe(id, data, numero_protocolo, produto, cliente)
 
     def listar_compras(self, lst):
-        texto.linha(51)
-        print(f'{"Id.":<10} {"Nome Produto.":<25}')
-        texto.linha(51)
+        texto.linha(60)
+        print(f'{"Id.":<10} {"Nome Produto.":<25} {"Pago."}')
+        texto.linha(60)
 
         for compra in lst:
-            print(f'{compra.id:<10} {compra.produto.nome:<25}')
-        texto.linha(51)
+            pg = compra.pg
+            txt_pg = '✅' if pg else '❌'
+
+            print(f'{compra.id:<10} {compra.produto.nome:<25} {txt_pg}')
+        texto.linha(60)
 
     def realizar_compra(self, lst):
         texto.limpa()
@@ -177,24 +178,35 @@ class Operacoes:
 
             return
 
-        else:
-            self.listar_compras(lst)
+        
+        self.listar_compras(lst)
 
-            opc = verificadores.verifica_int('| Qual comprar você quer realizar? (id): ')
+        opc = verificadores.verifica_int('| Qual comprar você quer realizar? (id): ')
             
-            while not 1 <= opc <= len(lst):
-                print(f'\n| Esse {texto.cores('amarelo')}ID{texto.cores()} {texto.cores('vermelho')}não existe{texto.cores()}!')
-                opc = verificadores.verifica_int('| Qual comprar você quer realizar? (id): ')
+        while not 1 <= opc <= len(lst):
+            print(f'\n| Esse {texto.cores('amarelo')}ID{texto.cores()} {texto.cores('vermelho')}não existe{texto.cores()}!')
+            opc = verificadores.verifica_int('| Qual comprar você quer realizar? (id): ')
 
-            compra = lst[opc - 1]
+        compra = lst[opc - 1]
 
+        if not compra.pg:
             texto.limpa()
             self.qtd_compra = verificadores.verifica_int('| Quantos itens você quer comprar? (unidades): ')
 
-            texto.limpa()
-            compra.realizar_pagamento(self.qtd_compra)
+        texto.limpa()
+        compra.realizar_pagamento(self.qtd_compra)
 
     def emitir_nota_fiscal(self, lst):
+        texto.limpa()
+        texto.titulo('Emitir nota fiscal')
+
+        if not lst:
+            print(f'| {texto.cores('amarelo')}Não há nenhuma compra cadastrada!{texto.cores()}')
+
+            input(f'\n| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
+
+            return
+            
         self.listar_compras(lst)
 
         opc = verificadores.verifica_int('| Qual comprar você quer emitir nota fiscal? (id): ')
@@ -205,7 +217,68 @@ class Operacoes:
 
         compra = lst[opc - 1]
 
+        texto.limpa()
         print(compra.emitir_nota_fiscal())
 
         input(f'| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
+
+    def mostar_validade(self, lst):
+        texto.limpa()
+        texto.titulo('mostar validade do produto')
+       
+        if not lst:
+            print(f'| {texto.cores('amarelo')} Não há nenhum produto cadastrado!{texto.cores()}')
+            
+            input(f'\n| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
+
+            return
+       
+        self.lista_produtos(lst)
+        opc = verificadores.verifica_int('| Qual produto você quer verificar a validade? (id): ')
+            
+        while not 1 <= opc <= len(lst):
+            print(f'\n| Esse {texto.cores('amarelo')}ID{texto.cores()} {texto.cores('vermelho')}não existe{texto.cores()}!')
+            opc = verificadores.verifica_int('| Qual produto você quer verificar a validade? (id): ')
+            
+        produto = lst[opc - 1]
+
+        texto.limpa()
+
+        print(f'| {produto.mostrar_validade()}')
+
+        input(f'\n| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
+
+        return
+    
+    def repor_estoque(self, lst):
+        texto.limpa()
+        texto.titulo('repor estoque')
+       
+        if not lst:
+            print(f'| {texto.cores('amarelo')} Não há nenhum produto cadastrado!{texto.cores()}')
+            
+            input(f'\n| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
+
+            return
+       
+        self.lista_produtos(lst)
+        opc = verificadores.verifica_int('| Qual produto você quer repor o estoque? (id): ')
+            
+        while not 1 <= opc <= len(lst):
+            print(f'\n| Esse {texto.cores('amarelo')}ID{texto.cores()} {texto.cores('vermelho')}não existe{texto.cores()}!')
+            opc = verificadores.verifica_int('| Qual produto você quer repor o estoque? (id): ')
+            
+        produto = lst[opc - 1]
+
+        texto.limpa()
+
+        qtd_reposicao = verificadores.verifica_int(f'| Quanto você quer repor no estoque? (unidades): ')
+
+        texto.limpa()
+
+        produto.repor_estoque(qtd_reposicao)
+
+        print(f'| Reposição feita com {texto.cores('verde')}sucesso{texto.cores()}!')
+
+        input(f'\n| Pressione {texto.cores('amarelo')}ENTER{texto.cores()} para continuar...')
 

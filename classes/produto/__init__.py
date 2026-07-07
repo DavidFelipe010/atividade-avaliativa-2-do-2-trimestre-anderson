@@ -9,9 +9,9 @@ class Produto:
     def __str__(self):
         return f'{self.id}/{self.nome}/{self.validade}'
     
-    def mostrar_preco(self):
-        return f'R${self.preco:,.2f}'
+    def mostrar_validade(self):
+        return f'{self.validade}'
 
-    def mostrar_quantidade_estoque(self):
-        return f'{self.quantidade} unidades'
+    def repor_estoque(self, qtd):
+        self.estoque += qtd
         
